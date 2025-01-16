@@ -62,7 +62,7 @@
             transition: all 0.3s ease;
         }
 
-        .language-selector > select > option:active{
+        .language-selector > select > option:active {
             background-color: #000000;
         }
 
@@ -78,16 +78,13 @@
             display: flex;
             padding: 3rem 0;
             position: relative;
-        
             border-radius: 15px;
             margin-bottom: 2rem;
-           
             transition: all 0.3s ease;
         }
 
         .verse:hover {
             transform: translateY(-5px);
-            
         }
 
         .controls {
@@ -96,6 +93,7 @@
             margin-right: 2rem;
             justify-content: start;
             order: 1;
+            z-index: -1;
         }
 
         .verse-content {
@@ -138,31 +136,51 @@
 
         .tooltip {
             position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            margin-left: 10px;
-            padding: 8px;
+            left: 50%;
+            bottom: -40px; /* Position below the icon */
+            transform: translateX(-50%);
+            margin-left: 0;
+            padding: 8px 12px;
             background-color: #e94560;
-            color: #ffffff;
+            color: white;
             border-radius: 4px;
             font-size: 14px;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: all 0.3s ease;
             z-index: 1000;
-            cursor: pointer;
-            text-decoration: none;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .tooltip:hover {
-            background-color: #c13e54;
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -6px;
+            transform: translateX(-50%);
+            border-width: 0 6px 6px 6px;
+            border-style: solid;
+            border-color: transparent transparent #e94560 transparent;
         }
 
         .icon-button:hover .tooltip {
             opacity: 1;
             visibility: visible;
+            bottom: -35px; /* Slight shift up on hover for animation */
+        }
+
+        .tooltip.clickable {
+            pointer-events: auto;
+            cursor: pointer;
+            text-decoration: none;
+            background-color: #e94560;
+            color: white;
+        }
+
+        .tooltip.clickable:hover {
+            background-color: #f5f5f5;
         }
 
         .arabic-text {
@@ -217,11 +235,14 @@
             }
 
             .tooltip {
+                bottom: -40px;
                 left: 50%;
-                top: 100%;
                 transform: translateX(-50%);
                 margin-left: 0;
-                margin-top: 10px;
+            }
+
+            .icon-button:hover .tooltip {
+                bottom: -35px;
             }
 
             .verse-content {
@@ -243,25 +264,22 @@
                 font-size: 15pt;
             }
 
-
             .language-selector {
                 top: 10px;
                 right: 10px;
             }
 
-            .controls{
+            .controls {
                 justify-content: end;
                 margin-top: 8px;
             }
 
             .icon-button svg {
-            width: 30px;
-            height: 30px;}
-
-
+                width: 30px;
+                height: 30px;
+            }
         }
 
-        /* Animation for verse appearance */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -269,10 +287,6 @@
 
         .verse {
             animation: fadeIn 0.5s ease-out;
-        }
-        
-        *{
-            overflow: hidden;
         }
     </style>
 </head>
@@ -289,7 +303,6 @@
     </div>
 
     <script>
-        // Verses data object with added referenceUrl
         const verses = [
             {
                 arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
@@ -311,28 +324,28 @@
 
         function renderVerses(language) {
             const container = document.getElementById('versesContainer');
-            container.innerHTML = ''; // Clear existing content
+            container.innerHTML = '';
 
             verses.forEach((verse, index) => {
                 const verseElement = document.createElement('div');
                 verseElement.className = 'verse';
-                verseElement.style.animationDelay = `${index * 0.2}s`; // Stagger animation
+                verseElement.style.animationDelay = `${index * 0.2}s`;
                 
                 const translationClass = language === 'english' ? 'translation english' : 'translation';
                 
                 verseElement.innerHTML = `
                     <div class="controls">
-                        <button class="icon-button" onclick="playAudio('${verse.audio}')" data-tooltip="Play Audio">
+                        <button class="icon-button" onclick="playAudio('${verse.audio}')" aria-label="Play Audio">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
                             </svg>
                             <span class="tooltip">Play Audio</span>
                         </button>
-                        <button class="icon-button">
+                        <button class="icon-button" aria-label="View Reference" style="z-index: 0;">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
-                            <a href="${verse.referenceUrl}" target="_blank" class="tooltip">${verse.reference}</a>
+                            <a href="${verse.referenceUrl}" target="_blank" class="tooltip clickable">${verse.reference}</a>
                         </button>
                     </div>
                     <div class="verse-content">
@@ -343,7 +356,6 @@
 
                 container.appendChild(verseElement);
 
-                // Add divider if not the last verse
                 if (index < verses.length - 1) {
                     const divider = document.createElement('div');
                     divider.className = 'divider';
@@ -375,8 +387,8 @@
             renderVerses(language);
         }
 
-        // Initial render
         renderVerses('urdu');
     </script>
 </body>
 </html>
+
