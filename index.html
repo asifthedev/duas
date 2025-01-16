@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quranic Interface</title>
+    <style>
+        @font-face {
+            font-family: "Arabic Font";
+            src: url(fonts/arabic/indopak.woff2) format("woff2");
+        }
+        
+        @font-face {
+            font-family: "Translation Font";
+            src: url(fonts/urdu/Jameel_Noori_Nastaleeq_Regular.ttf) format("truetype");
+        }
+
+        @font-face {
+            font-family: "SF Pro Display";
+            src: url(fonts/english/SFPRODISPLAYREGULAR.OTF);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0E1117;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: "SF Pro Display", Arial, sans-serif;
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: #2a2f3d;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .language-selector:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .language-selector select {
+            padding: 10px;
+            background-color: #0f3460;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector select:hover {
+            background-color: #e94560;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 80%;
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .verse {
+            display: flex;
+            padding: 3rem 0;
+            position: relative;
+        
+            border-radius: 15px;
+            margin-bottom: 2rem;
+           
+            transition: all 0.3s ease;
+        }
+
+        .verse:hover {
+            transform: translateY(-5px);
+            
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            margin-right: 2rem;
+            justify-content: center;
+        }
+
+        .verse-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            text-align: right;
+            padding: 0 2rem;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .icon-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .icon-button svg {
+            width: 24px;
+            height: 24px;
+            fill: #e0e0e0;
+            transition: fill 0.3s ease;
+        }
+
+        .icon-button:hover svg {
+            fill: #e94560;
+        }
+
+        .tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 10px;
+            padding: 8px;
+            background-color: #e94560;
+            color: #ffffff;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .tooltip:hover {
+            background-color: #c13e54;
+        }
+
+        .icon-button:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .arabic-text {
+            font-family: "Arabic Font";
+            letter-spacing: 1px;
+            font-weight: normal;
+            font-size: clamp(1.25rem, 4vw, 2rem);
+            vertical-align: middle;
+            direction: rtl;
+            unicode-bidi: normal;
+            text-align: justify;
+            color: #ffffff;
+        }
+
+        .translation {
+            font-family: "Translation Font";
+            font-size: clamp(0.875rem, 3vw, 1.875rem);
+            color: #cccccc;
+            line-height: 1.6;
+            letter-spacing: 1px;
+            vertical-align: middle;
+            direction: rtl;
+            text-align: justify;
+        }
+
+        .translation.english {
+            font-family: "SF Pro Display";
+            direction: ltr;
+            text-align: left;
+            letter-spacing: 0px;
+            font-size: 15pt;
+        }
+
+        .divider {
+            width: 100%;
+            height: 0.5px;
+            background-color: rgba(255, 255, 255, 0.128);
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .verse {
+                flex-direction: column;
+                padding: 2rem 1rem;
+            }
+
+            .controls {
+                flex-direction: row;
+                margin-right: 0;
+                margin-bottom: 1rem;
+                justify-content: center;
+            }
+
+            .tooltip {
+                left: 50%;
+                top: 100%;
+                transform: translateX(-50%);
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .verse-content {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 0 10px;
+            }
+
+            .verse {
+                padding: 1.5rem 0.5rem;
+            }
+
+            .language-selector {
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        /* Animation for verse appearance */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .verse {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="urdu">اردو</option>
+            <option value="english">English</option>
+        </select>
+    </div>
+
+    <div class="container" id="versesContainer">
+        <!-- Verses will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Verses data object with added referenceUrl
+        const verses = [
+            {
+                arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
+                urdu: "اے اللہ ! میں غم اور حزن سے تیری پناہ مانگتا ہوں ، عاجزی و سستی سے تیری پناہ مانگتا ہوں ، بزدلی اور کنجوسی سے تیری پناہ مانگتا ہوں اور قرض کے غلبہ اور لوگوں کے تسلط سے تیری پناہ مانگتا ہوں",
+                english: "O Allah, I seek refuge in Thee from care and grief, I seek refuge in Thee from incapacity and slackness, I seek refuge in Thee from cowardice and niggardliness, and I seek in Thee from being overcome by debt and being put in subjection by men",
+                reference: "Sunan Abi Dawud 1555",
+                referenceUrl: "https://sunnah.com/abudawud:1555",
+                audio: "audio/dua1.mp3"
+            },
+            {
+                arabic: "كُلُّ نَفْسٍ ذَآئِقَةُ الْمَوْتِ ثُمَّ اِلَيْنَا تُرْجَعُوْنَ",
+                urdu: "ہر نفس موت کا مزہ چکھنے والا ہے۔ پھر تم ہماری ہی طرف لوٹ کر آؤ گے",
+                english: "Every soul will taste death. Then to Us will you be returned",
+                reference: "Surah Al-Ankabut, Ayah 57",
+                referenceUrl: "https://quran.com/29/57",
+                audio: "audio/verse2.mp3"
+            }
+        ];
+
+        function renderVerses(language) {
+            const container = document.getElementById('versesContainer');
+            container.innerHTML = ''; // Clear existing content
+
+            verses.forEach((verse, index) => {
+                const verseElement = document.createElement('div');
+                verseElement.className = 'verse';
+                verseElement.style.animationDelay = `${index * 0.2}s`; // Stagger animation
+                
+                const translationClass = language === 'english' ? 'translation english' : 'translation';
+                
+                verseElement.innerHTML = `
+                    <div class="controls">
+                        <button class="icon-button" onclick="playAudio('${verse.audio}')" data-tooltip="Play Audio">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                            </svg>
+                            <span class="tooltip">Play Audio</span>
+                        </button>
+                        <button class="icon-button">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            <a href="${verse.referenceUrl}" target="_blank" class="tooltip">${verse.reference}</a>
+                        </button>
+                    </div>
+                    <div class="verse-content">
+                        <div class="arabic-text">${verse.arabic}</div>
+                        <div class="${translationClass}">${verse[language]}</div>
+                    </div>
+                `;
+
+                container.appendChild(verseElement);
+
+                // Add divider if not the last verse
+                if (index < verses.length - 1) {
+                    const divider = document.createElement('div');
+                    divider.className = 'divider';
+                    container.appendChild(divider);
+                }
+            });
+        }
+
+        let currentAudio = null;
+
+        function playAudio(audioSrc) {
+            if (currentAudio && currentAudio.src === audioSrc && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                return;
+            }
+            
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            
+            currentAudio = new Audio(audioSrc);
+            currentAudio.play();
+        }
+
+        function changeLanguage() {
+            const language = document.getElementById('languageSelect').value;
+            renderVerses(language);
+        }
+
+        // Initial render
+        renderVerses('urdu');
+    </script>
+</body>
+</html>
