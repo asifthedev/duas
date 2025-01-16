@@ -93,7 +93,8 @@
             margin-right: 2rem;
             justify-content: start;
             order: 1;
-            z-index: -1;
+            position: relative;
+            z-index: 2;
         }
 
         .verse-content {
@@ -116,6 +117,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            z-index: 1;
         }
 
         .icon-button:hover {
@@ -141,8 +143,8 @@
             transform: translateX(-50%);
             margin-left: 0;
             padding: 8px 12px;
-            background-color: #e94560;
-            color: white;
+            background-color: white;
+            color: #1a1a1a;
             border-radius: 4px;
             font-size: 14px;
             white-space: nowrap;
@@ -162,7 +164,7 @@
             transform: translateX(-50%);
             border-width: 0 6px 6px 6px;
             border-style: solid;
-            border-color: transparent transparent #e94560 transparent;
+            border-color: transparent transparent white transparent;
         }
 
         .icon-button:hover .tooltip {
@@ -175,8 +177,8 @@
             pointer-events: auto;
             cursor: pointer;
             text-decoration: none;
-            background-color: #e94560;
-            color: white;
+            background-color: white;
+            color: #1a1a1a;
         }
 
         .tooltip.clickable:hover {
@@ -185,12 +187,12 @@
 
         .arabic-text {
             font-family: "Arabic Font";
-            letter-spacing: 1px;
+            
             font-weight: normal;
             font-size: clamp(1.25rem, 4vw, 2rem);
             vertical-align: middle;
             direction: rtl;
-            unicode-bidi: normal;
+        
             text-align: justify;
             color: #ffffff;
         }
@@ -270,7 +272,7 @@
             }
 
             .controls {
-                justify-content: start;
+                justify-content: end;
                 margin-top: 8px;
             }
 
@@ -313,12 +315,34 @@
                 audio: "audio/dua1.mp3"
             },
             {
-                arabic: "كُلُّ نَفْسٍ ذَآئِقَةُ الْمَوْتِ ثُمَّ اِلَيْنَا تُرْجَعُوْنَ",
-                urdu: "ہر نفس موت کا مزہ چکھنے والا ہے۔ پھر تم ہماری ہی طرف لوٹ کر آؤ گے",
+                arabic: "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ، اللَّهُمَّ أَجُرْنِي فِي مُصِيبَتِي، وَاخْلُفْ لِي خَيْرًا مِنْهَا",
+                urdu: "بیشک ہم اللہ ہی کے لیےہیں اورہم اللہ ہی کی طرف لوٹنے والے ہیں،اے اللہ!میری مصیبت میں مجھے اجردے اوراس کے عوض مجھے اس کااچھابدلہ عنایت فرما۔",
                 english: "Every soul will taste death. Then to Us will you be returned",
-                reference: "Surah Al-Ankabut, Ayah 57",
-                referenceUrl: "https://quran.com/29/57",
-                audio: "audio/verse2.mp3"
+                reference: "Sahi Muslim 2126",
+                referenceUrl: "https://bit.ly/4aBllcd",
+                audio: "audio/dua2.mp3"
+            },
+            {
+                arabic: "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي وَاحْلُلْ عُقْدَةً مِّن لِّسَانِي يَفْقَهُوا قَوْلِي",
+                urdu: "اے میرے رب! میرا سینہ کھول دے، اور میرے لیے میرا کام آسان کر دے۔ اور میری زبان کی گرہ کھول دے تاکہ لوگ میری بات سمجھ سکیں۔",
+                english: "My Lord, expand for me my chest (with assurance), and ease for me my task, and untie the knot from my tongue, that they may understand my speech.",
+                reference: "Surah Taha 25 - 28",
+                referenceUrl: "https://bit.ly/40zJyfh",
+                audio:"/audio/dua3.mp3"
+            },
+            {
+                arabic: "اللَّهُمَّ طَهُرْ قَلْبِي مِنْ كُلِّ مَا لَا يُرْضِيكَ عَنِّي",
+                urdu: "اے اللہ، میرے دل کو ہر اُس چیز سے پاک کر دے جو تجھے مجھ سے راضی نہیں کرتی۔",
+                english: "O Allah, purify my heart from everything that does not please You.",
+                audio: "/audio/dua4.mp3",
+                reference: "Simple Dua"
+            },
+            {
+                arabic: "اللَّهُمَّ رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً، وَفِي الْآخِرَةِ حَسَنَةً، وَقِنَا عَذَابَ النَّارِ",
+                urdu: "اے ہمارے رب! ہمیں دنیا میں بھی بھلا ئی عطا فرما اور آخرت میں بھی بھلا ئی عطا فرما، اور ہمیں آگ کے عذاب سے بچا لے۔",
+                reference: "Sahi Bukhari 6389",
+                referenceUrl: "https://www.islamicurdubooks.com/hadith/hadith-.php?bookid=1&hadith_number=6389",
+                audio: "/audio/dua5.mp3"
             }
         ];
 
@@ -341,7 +365,7 @@
                             </svg>
                             <span class="tooltip">Play Audio</span>
                         </button>
-                        <button class="icon-button" aria-label="View Reference" style="z-index: 0;">
+                        <button class="icon-button" aria-label="View Reference">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                             </svg>
